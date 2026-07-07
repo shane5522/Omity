@@ -46,7 +46,7 @@ namespace Omity {
 			hardware_uuid = "DEVELOPER-DEBUG-MODE-UUID";
 		}
 		if (hardware_uuid.empty()) {
-			LOG_ERROR("[Security Warning} License verification failed. Anti-piracy lock activated.");
+			LOG_ERROR("[Security Warning] License verification failed. Anti-piracy lock activated.");
 			return false;
 		}
 		LOG_INFO("[Security] License key verified successfully. Access Granted.");
