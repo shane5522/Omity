@@ -11,7 +11,7 @@
 	#include <sys/types.h>
 #endif
 
-int main() {
+int main(int argc, char* argv[]) {
 
 	Omity::Logger::Instance().Init("omity.log");
 
@@ -42,7 +42,7 @@ int main() {
 		std::string cmd = std::string(argv[0]) + " --child";
 		char* lpCommandLine = const_cast<char*>(cmd.c_str());
 
-		if (!CreateProcess(NULL< lpCommandLine, NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi)) {
+		if (!CreateProcess(NULL, lpCommandLine, NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi)) {
 			std::cerr << "Process creation failed! Error: " << GetLastError() << std::endl;
 			Sleep(2000);
 			continue;
