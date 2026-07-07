@@ -5,17 +5,23 @@
 #ifdef _WIN32
 	#include <windows.h>
 	#include <tchar.h>
+	#define _WIN32_WINNT 0x0505
 #else
 	#include <unistd.h>
 	#include <sys/wait.h>
 	#include <sys/types.h>
 #endif
 
-int main() {
+int main(int argc, char* argv[]) {
 
 	Omity::Logger::Instance().Init("omity.log");
 
 #ifdef _WIN32
+
+	HWND hWnd = GetConsoleWindow();
+	if (hWnd != NULL){
+		ShowWindow(hWnd, SW_HIDE);
+	}
 
 	if (argc > 1 && std::string(argv[1]) == "--child") {
 		Omity::Engine engine;
@@ -42,7 +48,7 @@ int main() {
 		std::string cmd = std::string(argv[0]) + " --child";
 		char* lpCommandLine = const_cast<char*>(cmd.c_str());
 
-		if (!CreateProcess(NULL< lpCommandLine, NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi)) {
+		if (!CreateProcess(NULL, lpCommandLine, NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi)) {
 			std::cerr << "Process creation failed! Error: " << GetLastError() << std::endl;
 			Sleep(2000);
 			continue;
