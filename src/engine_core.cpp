@@ -88,14 +88,15 @@ namespace Omity {
 		if (m_failedQueue.empty()) return;
 
 		LOG_WARN("[Network Recovery] Internet reconnected! Processing " + std::to_string(m_failedQueue.size()) + " cached tasks...");
-	#ifndef _WIN32
 		for (const auto& filename : m_failedQueue) {
 			LOG_INFO("[Queue Dispatched] Successfully sent backed up task: " + filename);
-			std::this_thread::sleep_for(std::chrono::milliseconds(50));
+			#ifdef _WIN32
+				Sleep(50);
+			#else
+				std::this_thread::sleep_for(std::chrono::milliseconds(50));
+			#endif
 		}
 		m_failedQueue.clear();
-
-	#endif
 	}
 
 	void Engine::StartBackgroundLoop() {
@@ -108,32 +109,32 @@ namespace Omity {
 			int ticker = 0;
 
 			while (m_isRunning) {
-			#ifdef _WIN32
-				Sleep(100);
-			#else
-				std::this_thread::sleep_for(std::chrono::milliseconds(100));
-			#endif
+				#ifdef _WIN32
+					Sleep(100);
+				#else
+					std::this_thread::sleep_for(std::chrono::milliseconds(100));
+				#endif
 
-			ticker++;
+				ticker++;
 
-			if(ticker % 30 == 0) {
-				if (IsNetworkConnected()) {
-					ProcessFailedQueue();
+				if(ticker % 30 == 0) {
+					if (IsNetworkConnected()) {
+						ProcessFailedQueue();
+					}
 				}
-			}
 
-			if (ticker >= 100) {
-				ticker = 0;
-				std::string current_task = "omity_data_payload_" + std::to_string(time(NULL)) + ".dat";
-				LOG_INFO("[Engine Watchdog Target] File payload generated: " + current_task);
+				if (ticker >= 100) {
+					ticker = 0;
+					std::string current_task = "omity_data_payload_" + std::to_string(time(NULL)) + ".dat";
+					LOG_INFO("[Engine Watchdog Target] File payload generated: " + current_task);
 
-				if (IsNetworkConnected()) {
-					LOG_INFO("[Network Normal] Data instantly offloaded safely.");
-				} else {
-					LOG_WARN("[Network Error] Network connection lost. Securing inside local RAM Queue: " + current_task);
-					m_failedQueue.push_back(current_task);
+					if (IsNetworkConnected()) {
+						LOG_INFO("[Network Normal] Data instantly offloaded safely.");
+					} else {
+						LOG_WARN("[Network Error] Network connection lost. Securing inside local RAM Queue: " + current_task);
+						m_failedQueue.push_back(current_task);
+					}
 				}
-			}
 				
 				MinimizeMemoryUsage();
 			}
