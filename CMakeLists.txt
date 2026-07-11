@@ -12,4 +12,4 @@ add_executable(Omity
 	src/engine_minify.cpp
 	src/logger.cpp
 	src/main.cpp
-)
+   "src/string_utils.cpp" "include/file_event.h")

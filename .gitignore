@@ -1,48 +1,138 @@
 # =========================
-# Visual Studio
+# Build files (CMake)
 # =========================
-.vs/
-*.VC.db
-*.VC.opendb
 
-# Build directories
-Debug/
-Release/
-x64/
-x86/
-out/
-bin/
-obj/
-
-# CMake
 build/
+cmake-build-*/
 CMakeFiles/
 CMakeCache.txt
 cmake_install.cmake
-Makefile
 compile_commands.json
+Makefile
 
-# Generated project files
+
+# =========================
+# Visual Studio
+# =========================
+
+.vs/
 *.sln
 *.vcxproj
 *.vcxproj.filters
 *.vcxproj.user
 
-# Executables
-*.exe
-*.out
-*.app
+Debug/
+Release/
+x64/
+Win32/
 
-# Object files
-*.o
 *.obj
-*.so
+*.pdb
+*.ilk
+*.exe
 *.dll
-*.dylib
-*.a
 *.lib
 
-# Temporary files
+
+# =========================
+# Linux build files
+# =========================
+
+*.o
+*.a
+*.so
+
+
+# =========================
+# Logs
+# =========================
+
+logs/
 *.log
+
+# 현재 Logger가 생성하는 파일
+omity.log
+
+
+# =========================
+# Runtime files
+# =========================
+
+# 감시 대상 폴더
+watch/*
+
+# 임시 파일
+tmp/
+temp/
+
 *.tmp
+*.dat
+
+
+# =========================
+# Python
+# =========================
+
+python/__pycache__/
+__pycache__/
+
+*.pyc
+*.pyo
+
+.venv/
+venv/
+env/
+
+.pytest_cache/
+
+
+# =========================
+# IDE
+# =========================
+
+.vscode/
+.idea/
+
+
+# =========================
+# OS generated files
+# =========================
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# macOS
+.DS_Store
+
+
+# =========================
+# Package managers
+# =========================
+
+# vcpkg
+vcpkg_installed/
+
+# Conan
+.conan/
+
+
+# =========================
+# Environment / Config
+# =========================
+
+.env
+
+# 개인 설정 파일
+config.local.json
+config.local.yaml
+
+
+# =========================
+# Temporary files
+# =========================
+
+*.bak
 *.swp
+*.swo
+*~

@@ -2,6 +2,7 @@
 #include "logger.h"
 #include <string>
 #include <iostream>
+#include <filesystem>
 #ifdef _WIN32
 	#include <windows.h>
 	#include <tchar.h>
@@ -12,8 +13,12 @@
 #endif
 
 int main(int argc, char* argv[]) {
-
-	Omity::Logger::Instance().Init("omity.log");
+#ifdef _WIN32
+	SetConsoleOutputCP(CP_UTF8);
+	SetConsoleCP(CP_UTF8);
+#endif
+	std::filesystem::create_directories("logs");
+	Omity::Logger::Instance().Init("logs/omity.log");
 
 #ifdef _WIN32
 

@@ -12,29 +12,33 @@
 
 namespace Omity {
 
-class Engine {
-public:
-    Engine();
-    ~Engine();
+    class Engine {
+    public:
+        Engine();
+        ~Engine();
 
-    bool Initialize();                  
-    void StartBackgroundLoop();         
-    void Stop();                        
-    void MinimizeMemoryUsage();         
+        bool Initialize();                  
+        void StartBackgroundLoop();         
+        void Stop();                        
+        void MinimizeMemoryUsage();         
 
-private:
+    private:
 
-    bool IsNetworkConnected();
-    void ProcessFailedQueue();
+        bool IsNetworkConnected();
+        void ProcessFailedQueue();
 
-    std::atomic<bool> m_isRunning;      
+        std::atomic<bool> m_isRunning;
 
-#ifdef _WIN32
-    HANDLE m_hDir;                     
-#endif
+        // 파일 감시 쓰레드
+        void StartFileWatcher();
+        std::thread m_fileWatcherThread;
 
-    std::vector<std::string> m_failedQueue;
-};
+    #ifdef _WIN32
+        HANDLE m_hDir;                     
+    #endif
+
+        std::vector<std::string> m_failedQueue;
+    };
 
 } // namespace Omity
 
