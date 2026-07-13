@@ -1,10 +1,11 @@
 #ifndef OMITY_ENGINE_H
 #define OMITY_ENGINE_H
 
+#include "file.h"
 #include <string>
 #include <vector>
-#include <thread>
 #include <atomic>
+#include <thread>
 
 #ifdef _WIN32
     #include <windows.h>
@@ -30,8 +31,11 @@ namespace Omity {
         std::atomic<bool> m_isRunning;
 
         // 파일 감시 쓰레드
-        void StartFileWatcher();
         std::thread m_fileWatcherThread;
+
+        // 객체 선언
+        File m_file;
+        ZmqSender m_sender;
 
     #ifdef _WIN32
         HANDLE m_hDir;                     

@@ -12,4 +12,4 @@ add_executable(Omity
 	src/engine_minify.cpp
 	src/logger.cpp
 	src/main.cpp
-   "src/string_utils.cpp" "include/file_event.h")
+   "src/string_utils.cpp" "include/file_event.h" "include/file.h" "src/file_watcher.cpp" "src/file_event.cpp" "src/json_serializer.cpp" "include/json_serializer.h"   "include/zmq_sender.h" "src/zmq_sender.cpp")

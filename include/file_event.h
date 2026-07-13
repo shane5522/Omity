@@ -1,5 +1,5 @@
-#ifndef FILE_EVENT_H
-#define FILE_EVENT_H
+#ifndef OMITY_FILE_EVENT_H
+#define OMITY_FILE_EVENT_H
 
 #include <string>
 
@@ -19,12 +19,12 @@ namespace Omity
     struct FileEvent
     {
         FileAction action;
-
         std::string filename;
         std::string path;
 
     };
 
+    std::string ActionToString(FileAction action);
 }
 
 #endif
