@@ -21,41 +21,6 @@ namespace Omity
 		m_context.close();
 	}
 
-    bool ZmqSender::StartPythonProcess()
-    {
-        STARTUPINFOW si{};
-        PROCESS_INFORMATION pi{};
-
-        si.cb = sizeof(si);
-
-        std::wstring command = L"python .\\python\\ZeroMQ.py";
-
-        BOOL success = CreateProcessW(
-            nullptr,
-            command.data(),
-            nullptr,
-            nullptr,
-            FALSE,
-            CREATE_NO_WINDOW,
-            nullptr,
-            nullptr,
-            &si,
-            &pi
-        );
-
-        if (!success)
-        {
-            DWORD error = GetLastError();
-            std::cout << "Python 실행 실패. Error : " << error << std::endl;
-            return false;
-        }
-
-        CloseHandle(pi.hThread);
-        CloseHandle(pi.hProcess);
-
-        return true;
-    }
-
 	void ZmqSender::Send(const std::string& data)
 	{
 		zmq::message_t message(data.begin(), data.end());
@@ -63,10 +28,10 @@ namespace Omity
 		m_socket.send(message, zmq::send_flags::none);
 
 		LOG_INFO("[ZMQ SEND]" + data);
+	}
 
-        bool success = StartPythonProcess();
-
-        if (success)
-            LOG_INFO("success");
+	void ZmqSender::Shutdown()
+	{
+		Send("shutdown");
 	}
 }

@@ -12,7 +12,7 @@ namespace Omity
 		ZmqSender();
 		~ZmqSender();
 		void Send(const std::string& data);
-		bool StartPythonProcess();
+		void Shutdown();
 
 	private:
 		zmq::context_t m_context;

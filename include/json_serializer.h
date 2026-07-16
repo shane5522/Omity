@@ -8,6 +8,7 @@ namespace Omity
 {
 	class Json {
 	public:
+		std::string EscapeJson(const std::string& str);
 		std::string Serialize(const FileEvent& event);
 	};
 }

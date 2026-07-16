@@ -1,10 +1,11 @@
 #ifndef OMITY_ENGINE_H
 #define OMITY_ENGINE_H
 
-#include "file.h"
 #include <string>
 #include <vector>
 #include <atomic>
+#include "file.h"
+#include "zmq_sender.h"
 #include <thread>
 
 #ifdef _WIN32
@@ -21,7 +22,8 @@ namespace Omity {
         bool Initialize();                  
         void StartBackgroundLoop();         
         void Stop();                        
-        void MinimizeMemoryUsage();         
+        void MinimizeMemoryUsage(); 
+        bool StartPythonProcess();
 
     private:
 
@@ -30,8 +32,11 @@ namespace Omity {
 
         std::atomic<bool> m_isRunning;
 
-        // 파일 감시 쓰레드
+        // 쓰레드 선언
         std::thread m_fileWatcherThread;
+
+        // 프로세스 선언
+        HANDLE m_pythonProcess;
 
         // 객체 선언
         File m_file;

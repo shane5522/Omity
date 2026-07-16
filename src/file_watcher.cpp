@@ -109,9 +109,6 @@ namespace Omity
 					// zmq 전송
 					sender.Send(jsonData);
 
-					// 로그 출력 테스트
-					LOG_INFO(jsonData);
-
 					if (info->NextEntryOffset == 0) break;
 					info = reinterpret_cast<FILE_NOTIFY_INFORMATION*>(reinterpret_cast<BYTE*>(info) + info->NextEntryOffset);
 				}
