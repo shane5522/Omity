@@ -1,8 +1,12 @@
 #include "engine.h"
 #include "logger.h"
+#include "file.h"
+#include "zmq_sender.h"
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <thread>
+#include <functional>
 
 #ifdef _WIN32
 	#include <windows.h>
@@ -21,12 +25,76 @@
 #endif
 
 namespace Omity {
-	
+
 	Engine::Engine() : m_isRunning(false) {}
 	Engine::~Engine() { Stop(); }
 
+	bool Engine::StartPythonProcess()
+	{
+		STARTUPINFOW si{};
+		PROCESS_INFORMATION pi{};
+
+		si.cb = sizeof(si);
+
+
+		std::wstring command =
+			L"python \"C:\\Users\\junseo\\Desktop\\junseo\\Omity\\python\\zmq_receiver.py\"";
+
+
+		BOOL success = CreateProcessW(
+			nullptr,
+			&command[0],
+			nullptr,
+			nullptr,
+			FALSE,
+			0,
+			nullptr,
+			nullptr,
+			&si,
+			&pi
+		);
+
+
+		if (!success)
+		{
+			DWORD error = GetLastError();
+
+			LOG_ERROR(
+				"Python execution failed : "
+				+ std::to_string(error)
+			);
+
+			return false;
+		}
+
+
+		LOG_INFO("Python process started");
+
+
+		// thread handle은 필요 없음
+		CloseHandle(pi.hThread);
+
+
+		// process handle은 저장해야 함
+		m_pythonProcess = pi.hProcess;
+
+
+		return true;
+	}
+
 	bool Engine::Initialize() {
 		LOG_INFO("Omity Engine Initializing...");
+
+		bool success = StartPythonProcess();
+
+		if (!success)
+		{
+			LOG_INFO("fail");
+		}
+		else
+		{
+			LOG_INFO("success");
+		}
 
 	#ifdef _WIN32
 
@@ -99,12 +167,16 @@ namespace Omity {
 		m_failedQueue.clear();
 	}
 
+	
+
 	void Engine::StartBackgroundLoop() {
+
 		#ifdef _WIN32
 			std::cout << "Omity Engine starts Windows background resident..." << std::endl;
 		#else
 			std::cout << "Omity Engine starts Linux background resident..." << std::endl;
 		#endif
+			m_fileWatcherThread = std::thread(&File::StartFileWatcher, &m_file, std::ref(m_isRunning), std::ref(m_sender));
 
 			int ticker = 0;
 
@@ -142,7 +214,13 @@ namespace Omity {
 
 	void Engine::Stop() {
 		if (m_isRunning) {
+			m_sender.Shutdown();
+
 			m_isRunning = false;
+
+			// 쓰레드 정리
+			if (m_fileWatcherThread.joinable()) m_fileWatcherThread.join();
+
 			std::cout << "Omity Engine has been safely shut down." << std::endl;
 		}
 	}
